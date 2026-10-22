@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pronto Socorro</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <h1>Pronto Socorro</h1>
+        <nav>
+          <button class="nav-btn active" data-target="login-panel">Login</button>
+          <button class="nav-btn" data-target="paciente-panel">Pacientes</button>
+          <button class="nav-btn" data-target="triagem-panel">Triagem</button>
+          <button class="nav-btn" data-target="medico-panel">Médico</button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="login-panel" class="panel active">
+          <h2>Autenticação</h2>
+          <form id="login-form" class="card form-card">
+            <label>
+              E-mail
+              <input type="email" id="email" name="email" required />
+            </label>
+            <label>
+              Senha
+              <input type="password" id="senha" name="senha" required />
+            </label>
+            <button type="submit">Entrar</button>
+          </form>
+          <div id="login-status" class="status-box"></div>
+        </section>
+
+        <section id="paciente-panel" class="panel">
+          <h2>Recepção - Pacientes</h2>
+          <form id="paciente-form" class="card form-card">
+            <div class="grid-2">
+              <label>
+                Nome completo
+                <input type="text" name="nome_completo" required />
+              </label>
+              <label>
+                CPF
+                <input type="text" name="cpf" placeholder="000.000.000-00" required />
+              </label>
+              <label>
+                RG
+                <input type="text" name="rg" required />
+              </label>
+              <label>
+                Nome da mãe
+                <input type="text" name="nome_mae" required />
+              </label>
+              <label>
+                Nome do pai
+                <input type="text" name="nome_pai" />
+              </label>
+              <label>
+                Data de nascimento
+                <input type="date" name="data_nascimento" required />
+              </label>
+              <label>
+                Sexo
+                <select name="sexo" required>
+                  <option value="">Selecione</option>
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </label>
+              <label>
+                Telefone
+                <input type="text" name="telefone" />
+              </label>
+              <label>
+                Endereço
+                <input type="text" name="endereco" />
+              </label>
+              <label>
+                E-mail
+                <input type="email" name="email" />
+              </label>
+            </div>
+            <button type="submit">Salvar paciente</button>
+          </form>
+          <div id="paciente-lista" class="card list-box"></div>
+        </section>
+
+        <section id="triagem-panel" class="panel">
+          <h2>Enfermagem - Triagem</h2>
+          <form id="triagem-form" class="card form-card">
+            <div class="grid-2">
+              <label>
+                ID do atendimento
+                <input type="number" name="id_atendimento" required />
+              </label>
+              <label>
+                Pressão arterial
+                <input type="text" name="pressao_arterial" placeholder="120x80" />
+              </label>
+              <label>
+                Temperatura
+                <input type="text" name="temperatura" placeholder="36.5" />
+              </label>
+              <label>
+                FC (bpm)
+                <input type="number" name="frequencia_cardiaca" />
+              </label>
+              <label class="full-width">
+                Queixa principal
+                <textarea name="queixa_principal" required></textarea>
+              </label>
+              <label>
+                Classificação Manchester
+                <select name="classificacao_manchester" required>
+                  <option value="">Selecione</option>
+                  <option value="VERMELHO">VERMELHO</option>
+                  <option value="LARANJA">LARANJA</option>
+                  <option value="AMARELO">AMARELO</option>
+                  <option value="VERDE">VERDE</option>
+                  <option value="AZUL">AZUL</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit">Registrar triagem</button>
+          </form>
+          <div id="triagem-status" class="status-box"></div>
+        </section>
+
+        <section id="medico-panel" class="panel">
+          <h2>Médico - Painel</h2>
+          <div class="card list-box">
+            <h3>Atendimentos aguardando médico</h3>
+            <div id="painel-medico"></div>
+          </div>
+
+          <div class="card form-card action-form">
+            <h3>Iniciar consulta</h3>
+            <div class="grid-2">
+              <label>
+                ID do atendimento
+                <input type="number" id="iniciar-atendimento-id" />
+              </label>
+            </div>
+            <button id="iniciar-consulta-btn">Iniciar consulta</button>
+          </div>
+
+          <div class="card form-card action-form">
+            <h3>Finalizar consulta</h3>
+            <div class="grid-2">
+              <label>
+                ID do atendimento
+                <input type="number" id="finalizar-atendimento-id" />
+              </label>
+              <label>
+                Diagnóstico
+                <input type="text" id="diagnostico" />
+              </label>
+              <label>
+                Medicações
+                <input type="text" id="medicacoes_prescritas" />
+              </label>
+              <label>
+                Observações
+                <input type="text" id="observacoes" />
+              </label>
+            </div>
+            <button id="finalizar-consulta-btn">Finalizar consulta</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

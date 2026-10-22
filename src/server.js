@@ -7,6 +7,7 @@ const profissionalRoutes = require('./routes/profissionalRoutes');
 const pacienteRoutes = require('./routes/pacienteRoutes');
 const triagemRoutes = require('./routes/triagemRoutes');
 const medicoRoutes = require('./routes/medicoRoutes');
+const frontendRoutes = require('./routes/frontendRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get('/ping', (req, res) => {
     res.json({ mensagem: 'API do Pronto Socorro - Rodando perfeitamente!' });
 });
 
+app.use('/', frontendRoutes);
 app.use('/api/profissionais', profissionalRoutes);
 app.use('/api/pacientes', pacienteRoutes);
 app.use('/api/atendimentos', atendimentoRoutes);
