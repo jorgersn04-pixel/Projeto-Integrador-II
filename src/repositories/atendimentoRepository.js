@@ -10,14 +10,24 @@ class AtendimentoRepository {
     }
 
     async criarAtendimento(numero, idPaciente, idRecepcionista) {
-        const [resultado] = await db.query(
-            `INSERT INTO atendimento
-                (numero, id_paciente, id_recepcionista, status)
-             VALUES (?, ?, ?, 'AGUARDANDO_TRIAGEM')`,
-            [numero, idPaciente, idRecepcionista]
-        );
+        const sql = `
+            INSERT INTO atendimento (numero_atendimento, id_paciente, id_recepcionista, status) 
+            VALUES (?, ?, ?, 'AGUARDANDO_TRIAGEM')
+        `;
 
-        return resultado.insertId;
+        const [result] = await db.execute(sql, [numero, idPaciente, idRecepcionista]);
+        return result.insertId;
+    }
+
+    async atualizarStatusAtendimento(idAtendimento, status) {
+        const sql = `
+            UPDATE atendimento
+               SET status = ?
+             WHERE id_atendimento = ?
+        `;
+
+        const [result] = await db.execute(sql, [status, idAtendimento]);
+        return result.affectedRows;
     }
 }
 

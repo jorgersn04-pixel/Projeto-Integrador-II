@@ -3,6 +3,10 @@ const cors = require('cors');
 require('dotenv').config();
 
 const atendimentoRoutes = require('./routes/atendimentoRoutes');
+const profissionalRoutes = require('./routes/profissionalRoutes');
+const pacienteRoutes = require('./routes/pacienteRoutes');
+const triagemRoutes = require('./routes/triagemRoutes');
+const medicoRoutes = require('./routes/medicoRoutes');
 
 const app = express();
 
@@ -13,7 +17,11 @@ app.get('/ping', (req, res) => {
     res.json({ mensagem: 'API do Pronto Socorro - Rodando perfeitamente!' });
 });
 
+app.use('/api/profissionais', profissionalRoutes);
+app.use('/api/pacientes', pacienteRoutes);
 app.use('/api/atendimentos', atendimentoRoutes);
+app.use('/api/triagens', triagemRoutes);
+app.use('/api/medicos', medicoRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
