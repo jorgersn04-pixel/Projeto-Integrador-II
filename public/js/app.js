@@ -1,25 +1,42 @@
 const API_BASE = 'http://localhost:3000/api';
 
 const state = {
-  token: '',
   profissional: null
 };
 
 function setStatus(elementId, message, isError = false) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  el.textContent = message;
-  el.style.color = isError ? '#dc2626' : '#16a34a';
+  const element = document.getElementById(elementId);
+  if (!element) return;
+
+  element.textContent = message;
+  element.style.color = isError ? '#f87171' : '#34d399';
 }
 
-function bindNavigation() {
+function showLogin() {
+  const loginContainer = document.getElementById('login-container');
+  const dashboardContainer = document.getElementById('dashboard-container');
+
+  if (loginContainer) loginContainer.classList.remove('hidden');
+  if (dashboardContainer) dashboardContainer.classList.add('hidden');
+}
+
+function showDashboard() {
+  const loginContainer = document.getElementById('login-container');
+  const dashboardContainer = document.getElementById('dashboard-container');
+
+  if (loginContainer) loginContainer.classList.add('hidden');
+  if (dashboardContainer) dashboardContainer.classList.remove('hidden');
+}
+
+function bindSidebarNavigation() {
   document.querySelectorAll('.nav-btn').forEach((button) => {
     button.addEventListener('click', () => {
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
-      button.classList.add('active');
-      const target = document.getElementById(button.dataset.target);
-      if (target) target.classList.add('active');
+      const sectionId = button.dataset.section;
+
+      document.querySelectorAll('.nav-btn').forEach((btn) => btn.classList.toggle('active', btn === button));
+      document.querySelectorAll('.content-section').forEach((section) => {
+        section.classList.toggle('hidden', section.id !== sectionId);
+      });
     });
   });
 }
@@ -46,7 +63,7 @@ function formatCpf(value) {
     .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 }
 
-function setPacienteFormMasks() {
+function bindMasks() {
   const cpfInput = document.querySelector('input[name="cpf"]');
   if (cpfInput) {
     cpfInput.addEventListener('input', (event) => {
@@ -77,12 +94,12 @@ async function carregarPacientes() {
   try {
     const pacientes = await fetchJson(`${API_BASE}/pacientes`);
     container.innerHTML = pacientes.length
-      ? pacientes.map(p => `
+      ? pacientes.map((paciente) => `
           <div class="patient-item">
-            <strong>${p.nome_completo}</strong><br>
-            <span class="muted">CPF: ${p.cpf}</span><br>
-            <span class="muted">RG: ${p.rg}</span><br>
-            <span class="muted">Nascimento: ${p.data_nascimento}</span>
+            <strong>${paciente.nome_completo}</strong><br>
+            <span class="muted">CPF: ${paciente.cpf}</span><br>
+            <span class="muted">RG: ${paciente.rg}</span><br>
+            <span class="muted">Nascimento: ${paciente.data_nascimento}</span>
           </div>
         `).join('')
       : '<p>Nenhum paciente cadastrado.</p>';
@@ -98,7 +115,7 @@ async function carregarPainelMedico() {
   try {
     const atendimentos = await fetchJson(`${API_BASE}/medicos/painel`);
     container.innerHTML = atendimentos.length
-      ? atendimentos.map(item => `
+      ? atendimentos.map((item) => `
           <div class="painel-item">
             <strong>${item.numero_atendimento}</strong><br>
             <span class="muted">Paciente: ${item.nome_paciente}</span><br>
@@ -121,15 +138,15 @@ async function loginHandler(event) {
   };
 
   try {
-    const result = await fetch(`${API_BASE}/profissionais/login`, {
+    const response = await fetch(`${API_BASE}/profissionais/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const data = await result.json().catch(() => ({}));
+    const data = await response.json().catch(() => ({}));
 
-    if (!result.ok) {
+    if (!response.ok) {
       throw new Error(data.mensagem || 'Não foi possível autenticar.');
     }
 
@@ -139,7 +156,12 @@ async function loginHandler(event) {
       cargo: data.cargo
     };
 
+    localStorage.setItem('usuarioAtual', JSON.stringify(state.profissional));
+    localStorage.setItem('usuarioId', String(data.id));
+    localStorage.setItem('usuarioCargo', data.cargo);
+
     setStatus('login-status', `Login realizado com sucesso: ${data.nome} (${data.cargo})`);
+    showDashboard();
     await carregarPacientes();
     await carregarPainelMedico();
   } catch (error) {
@@ -237,8 +259,25 @@ function bindActions() {
   document.getElementById('finalizar-consulta-btn')?.addEventListener('click', finalizarConsulta);
 }
 
-bindNavigation();
+function initializeSession() {
+  const usuarioSalvo = localStorage.getItem('usuarioAtual');
+
+  if (usuarioSalvo) {
+    try {
+      state.profissional = JSON.parse(usuarioSalvo);
+      showDashboard();
+      carregarPacientes();
+      carregarPainelMedico();
+      return;
+    } catch (error) {
+      localStorage.removeItem('usuarioAtual');
+    }
+  }
+
+  showLogin();
+}
+
+bindSidebarNavigation();
 bindActions();
-setPacienteFormMasks();
-carregarPacientes();
-carregarPainelMedico();
+bindMasks();
+initializeSession();

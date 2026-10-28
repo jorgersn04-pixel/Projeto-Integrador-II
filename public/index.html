@@ -7,37 +7,48 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <div id="login-container" class="auth-screen">
+      <div class="login-card">
+        <div class="login-header">
+          <h1>Pronto Socorro</h1>
+          <p>Controle de atendimento</p>
+        </div>
+
+        <form id="login-form">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" placeholder="nome@hospital.com" required />
+
+          <label for="senha">Senha</label>
+          <input id="senha" name="senha" type="password" placeholder="Digite sua senha" required />
+
+          <button type="submit">Entrar</button>
+        </form>
+
+        <div id="login-status" class="status-message" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div id="dashboard-container" class="dashboard-container hidden">
       <aside class="sidebar">
-        <h1>Pronto Socorro</h1>
-        <nav>
-          <button class="nav-btn active" data-target="login-panel">Login</button>
-          <button class="nav-btn" data-target="paciente-panel">Pacientes</button>
-          <button class="nav-btn" data-target="triagem-panel">Triagem</button>
-          <button class="nav-btn" data-target="medico-panel">Médico</button>
+        <div class="sidebar-brand">
+          <h2>Pronto Socorro</h2>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Menu principal">
+          <button class="nav-btn active" data-section="secao-recepcao" type="button">Recepção</button>
+          <button class="nav-btn" data-section="secao-triagem" type="button">Triagem</button>
+          <button class="nav-btn" data-section="secao-medico" type="button">Médico</button>
+          <button class="nav-btn" data-section="secao-painel" type="button">Painel</button>
         </nav>
       </aside>
 
-      <main class="content">
-        <section id="login-panel" class="panel active">
-          <h2>Autenticação</h2>
-          <form id="login-form" class="card form-card">
-            <label>
-              E-mail
-              <input type="email" id="email" name="email" required />
-            </label>
-            <label>
-              Senha
-              <input type="password" id="senha" name="senha" required />
-            </label>
-            <button type="submit">Entrar</button>
-          </form>
-          <div id="login-status" class="status-box"></div>
-        </section>
+      <main class="main-content">
+        <section id="secao-recepcao" class="content-section card">
+          <div class="section-header">
+            <h3>Recepção</h3>
+          </div>
 
-        <section id="paciente-panel" class="panel">
-          <h2>Recepção - Pacientes</h2>
-          <form id="paciente-form" class="card form-card">
+          <form id="paciente-form" class="form-card">
             <div class="grid-2">
               <label>
                 Nome completo
@@ -86,12 +97,16 @@
             </div>
             <button type="submit">Salvar paciente</button>
           </form>
-          <div id="paciente-lista" class="card list-box"></div>
+
+          <div id="paciente-lista" class="list-box"></div>
         </section>
 
-        <section id="triagem-panel" class="panel">
-          <h2>Enfermagem - Triagem</h2>
-          <form id="triagem-form" class="card form-card">
+        <section id="secao-triagem" class="content-section card hidden">
+          <div class="section-header">
+            <h3>Triagem</h3>
+          </div>
+
+          <form id="triagem-form" class="form-card">
             <div class="grid-2">
               <label>
                 ID do atendimento
@@ -127,29 +142,28 @@
             </div>
             <button type="submit">Registrar triagem</button>
           </form>
-          <div id="triagem-status" class="status-box"></div>
+
+          <div id="triagem-status" class="status-message" aria-live="polite"></div>
         </section>
 
-        <section id="medico-panel" class="panel">
-          <h2>Médico - Painel</h2>
-          <div class="card list-box">
-            <h3>Atendimentos aguardando médico</h3>
-            <div id="painel-medico"></div>
+        <section id="secao-medico" class="content-section card hidden">
+          <div class="section-header">
+            <h3>Médico</h3>
           </div>
 
-          <div class="card form-card action-form">
-            <h3>Iniciar consulta</h3>
+          <div class="form-card">
+            <h4>Iniciar consulta</h4>
             <div class="grid-2">
               <label>
                 ID do atendimento
                 <input type="number" id="iniciar-atendimento-id" />
               </label>
             </div>
-            <button id="iniciar-consulta-btn">Iniciar consulta</button>
+            <button id="iniciar-consulta-btn" type="button">Iniciar consulta</button>
           </div>
 
-          <div class="card form-card action-form">
-            <h3>Finalizar consulta</h3>
+          <div class="form-card">
+            <h4>Finalizar consulta</h4>
             <div class="grid-2">
               <label>
                 ID do atendimento
@@ -168,7 +182,18 @@
                 <input type="text" id="observacoes" />
               </label>
             </div>
-            <button id="finalizar-consulta-btn">Finalizar consulta</button>
+            <button id="finalizar-consulta-btn" type="button">Finalizar consulta</button>
+          </div>
+        </section>
+
+        <section id="secao-painel" class="content-section card hidden">
+          <div class="section-header">
+            <h3>Painel</h3>
+          </div>
+
+          <div class="panel-list">
+            <h4>Atendimentos aguardando médico</h4>
+            <div id="painel-medico"></div>
           </div>
         </section>
       </main>
